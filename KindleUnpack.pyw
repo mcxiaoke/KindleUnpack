@@ -101,86 +101,112 @@ class MainDialog(tkinter.Frame):
         # EX: mobipath = prefs['mobipath'] = config.get('Defaults', mobipath).
         self.prefs = getprefs(CONFIGFILE, self.root, PERSISTENT_PREFS)
 
+        line = 0
+
         self.status = tkinter.StringVar()
-        tkinter.Label(self, textvariable=self.status, justify='center').grid(row=0, columnspan=3, sticky=tkinter_constants.N)
+        tkinter.Label(self, textvariable=self.status, justify='center').grid(row=line, columnspan=3, sticky=tkinter_constants.N)
         self.status.set('Upack a non-DRM Kindle eBook')
         sticky = tkinter_constants.E + tkinter_constants.W
         ALL = tkinter_constants.E+tkinter_constants.W+tkinter_constants.N+tkinter_constants.S
         # Set to the column the textentry boxes are in.
         self.grid_columnconfigure(1, weight=1)
         # Set to the row the debug log widget is in.
-        self.grid_rowconfigure(10, weight=1)
+        self.grid_rowconfigure(8, weight=1)
 
-        tkinter.Label(self, text='').grid(row=1, sticky=tkinter_constants.E)
-        tkinter.Label(self, text='Unencrypted Kindle eBook input file', wraplength=200).grid(row=2, sticky=tkinter_constants.E)
+        line += 1
+        tkinter.Label(self, text='').grid(row=line, sticky=tkinter_constants.E)
+
+        line += 1
+        tkinter.Label(self, text='Kindle eBook input file', wraplength=200).grid(row=2, sticky=tkinter_constants.E)
         self.mobipath = tkinter.Entry(self, width=50)
-        self.mobipath.grid(row=2, column=1, sticky=sticky)
+        self.mobipath.grid(row=line, column=1, sticky=sticky)
         self.mobipath.insert(0, '')
         button = tkinter.Button(self, text="Browse...", command=self.get_mobipath)
-        button.grid(row=2, column=2, sticky=sticky)
+        button.grid(row=line, column=2, sticky=sticky)
 
-        tkinter.Label(self, text='Output Directory', wraplength=200).grid(row=3, sticky=tkinter_constants.E)
+        line += 1
+        tkinter.Label(self, text='Input Directory', wraplength=200).grid(row=line, sticky=tkinter_constants.E)
+        self.inpath = tkinter.Entry(self, width=50)
+        self.inpath.grid(row=line, column=1, sticky=sticky)
+        if self.prefs['inpath'] and PERSISTENT_PREFS and unipath.exists(CONFIGFILE):
+            inpath = pathof(os.path.normpath(self.prefs['inpath']))
+            self.inpath.insert(0, inpath)
+        else:
+            self.inpath.insert(0, '')
+        button = tkinter.Button(self, text="Browse...", command=self.get_inpath)
+        button.grid(row=line, column=2, sticky=sticky)
+
+        line += 1
+        tkinter.Label(self, text='Output Directory', wraplength=200).grid(row=line, sticky=tkinter_constants.E)
         self.outpath = tkinter.Entry(self, width=50)
-        self.outpath.grid(row=3, column=1, sticky=sticky)
+        self.outpath.grid(row=line, column=1, sticky=sticky)
         if self.prefs['outpath'] and PERSISTENT_PREFS and unipath.exists(CONFIGFILE):
             outpath = pathof(os.path.normpath(self.prefs['outpath']))
             self.outpath.insert(0, outpath)
         else:
             self.outpath.insert(0, '')
         button = tkinter.Button(self, text="Browse...", command=self.get_outpath)
-        button.grid(row=3, column=2, sticky=sticky)
+        button.grid(row=line, column=2, sticky=sticky)
 
-        tkinter.Label(self, text='OPTIONAL: APNX file Associated with AZW3', wraplength=200).grid(row=4, sticky=tkinter_constants.E)
+        line += 1
+        tkinter.Label(self, text='OPTIONAL: APNX file', wraplength=200).grid(row=line, sticky=tkinter_constants.E)
         self.apnxpath = tkinter.Entry(self, width=50)
-        self.apnxpath.grid(row=4, column=1, sticky=sticky)
+        self.apnxpath.grid(row=line, column=1, sticky=sticky)
         self.apnxpath.insert(0, '')
         button = tkinter.Button(self, text="Browse...", command=self.get_apnxpath)
-        button.grid(row=4, column=2, sticky=sticky)
+        button.grid(row=line, column=2, sticky=sticky)
 
+        line += 1
         self.splitvar = tkinter.IntVar()
         checkbox = tkinter.Checkbutton(self, text="Split Combination Kindlegen eBooks", variable=self.splitvar)
         if self.prefs['splitvar'] and PERSISTENT_PREFS:
             checkbox.select()
-        checkbox.grid(row=5, column=1, columnspan=2, sticky=tkinter_constants.W)
+        checkbox.grid(row=line, column=1, columnspan=2, sticky=tkinter_constants.W)
 
+        line += 1
         self.rawvar = tkinter.IntVar()
         checkbox = tkinter.Checkbutton(self, text="Write Raw Data", variable=self.rawvar)
         if self.prefs['rawvar'] and PERSISTENT_PREFS:
             checkbox.select()
-        checkbox.grid(row=6, column=1, columnspan=2, sticky=tkinter_constants.W)
+        checkbox.grid(row=line, column=1, columnspan=2, sticky=tkinter_constants.W)
 
+        line += 1
         self.dbgvar = tkinter.IntVar()
         checkbox = tkinter.Checkbutton(self, text="Dump Mode", variable=self.dbgvar)
         if self.prefs['dbgvar'] and PERSISTENT_PREFS:
             checkbox.select()
-        checkbox.grid(row=7, column=1, columnspan=2, sticky=tkinter_constants.W)
+        checkbox.grid(row=line, column=1, columnspan=2, sticky=tkinter_constants.W)
 
+        line += 1
         self.hdvar = tkinter.IntVar()
         checkbox = tkinter.Checkbutton(self, text="Use HD Images If Present", variable=self.hdvar)
         if self.prefs['hdvar'] and PERSISTENT_PREFS:
             checkbox.select()
-        checkbox.grid(row=8, column=1, columnspan=2, sticky=tkinter_constants.W)
+        checkbox.grid(row=line, column=1, columnspan=2, sticky=tkinter_constants.W)
 
-        tkinter.Label(self, text='ePub Output Type:').grid(row=9, sticky=tkinter_constants.E)
+        line += 1
+        tkinter.Label(self, text='ePub Output Type:').grid(row=line, sticky=tkinter_constants.E)
         self.epubver_val = tkinter.StringVar()
         self.epubver = tkinter_ttk.Combobox(self, textvariable=self.epubver_val, state='readonly')
         self.epubver['values'] = ('ePub 2', 'ePub 3', 'Auto-detect', 'Force ePub 2')
         self.epubver.current(0)
         if self.prefs['epubver'] and PERSISTENT_PREFS:
             self.epubver.current(self.prefs['epubver'])
-        self.epubver.grid(row=9, column=1, columnspan=2, pady=(3,5), sticky=tkinter_constants.W)
+        self.epubver.grid(row=line, column=1, columnspan=2, pady=(3,5), sticky=tkinter_constants.W)
 
+        line += 1
         msg1 = 'Conversion Log \n\n'
         self.stext = ScrolledText(self, bd=5, relief=tkinter_constants.RIDGE, wrap=tkinter_constants.WORD)
-        self.stext.grid(row=10, column=0, columnspan=3, sticky=ALL)
+        self.stext.grid(row=line, column=0, columnspan=3, sticky=ALL)
         self.stext.insert(tkinter_constants.END,msg1)
 
+        line += 1
         self.sbotton = tkinter.Button(
             self, text="Start", width=10, command=self.convertit)
-        self.sbotton.grid(row=11, column=1, sticky=tkinter_constants.S+tkinter_constants.E)
+        self.sbotton.grid(row=line, column=1, sticky=tkinter_constants.S+tkinter_constants.E)
         self.qbutton = tkinter.Button(
             self, text="Quit", width=10, command=self.quitting)
-        self.qbutton.grid(row=11, column=2, sticky=tkinter_constants.S+tkinter_constants.W)
+        self.qbutton.grid(row=line, column=2, sticky=tkinter_constants.S+tkinter_constants.W)
         if self.prefs['windowgeometry'] and PERSISTENT_PREFS:
             self.root.geometry(self.prefs['windowgeometry'])
         else:
@@ -268,6 +294,25 @@ class MainDialog(tkinter.Frame):
             self.apnxpath.insert(0, apnxpath)
         return
 
+    def get_inpath(self):
+        cwd = unipath.getcwd()
+        if sys.platform.startswith("win") and PY2:
+            # tk_chooseDirectory is horribly broken for unicode paths
+            # on windows - bug has been reported but not fixed for years
+            # workaround by using our own unicode aware version
+            inpath = AskFolder(message="Folder to Store Input into",
+                defaultLocation=self.prefs['inpath'] or unipath.getcwd())
+        else:
+            inpath = tkinter_filedialog.askdirectory(
+                parent=None, title='Folder to Store Input into',
+                initialdir=self.prefs['inpath'] or cwd, initialfile=None)
+        if inpath:
+            self.prefs['inpath'] = inpath
+            inpath = pathof(os.path.normpath(inpath))
+            self.inpath.delete(0, tkinter_constants.END)
+            self.inpath.insert(0, inpath)
+        return
+
     def get_outpath(self):
         cwd = unipath.getcwd()
         if sys.platform.startswith("win") and PY2:
@@ -304,11 +349,15 @@ class MainDialog(tkinter.Frame):
         self.sbotton.configure(state='disabled')
         mobipath = unicode_str(self.mobipath.get())
         apnxpath = unicode_str(self.apnxpath.get())
+        indir = unicode_str(self.inpath.get())
         outdir = unicode_str(self.outpath.get())
-        if not mobipath or not unipath.exists(mobipath):
-            self.status.set('Specified eBook file does not exist')
+        batch_mode = False
+        if not mobipath and not indir:
+            self.status.set('No input file or directory specified')
             self.sbotton.configure(state='normal')
             return
+        if indir and unipath.exists(indir):
+            batch_mode = True
         apnxfile = None
         if apnxpath != "" and unipath.exists(apnxpath):
             apnxfile = apnxpath
@@ -317,7 +366,8 @@ class MainDialog(tkinter.Frame):
             self.sbotton.configure(state='normal')
             return
         q = self.q
-        log = 'Input Path = "'+ mobipath + '"\n'
+        log = 'Input File = "'+ mobipath + '"\n'
+        log = 'Input Path = "'+ indir + '"\n'
         log += 'Output Path = "' + outdir + '"\n'
         if apnxfile != None:
             log += 'APNX Path = "' + apnxfile + '"\n'
@@ -350,7 +400,7 @@ class MainDialog(tkinter.Frame):
         log += '\n\n'
         log += 'Please Wait ...\n\n'
         self.stext.insert(tkinter_constants.END,log)
-        self.p2 = Process(target=unpackEbook, args=(q, mobipath, outdir, apnxfile, epubversion, use_hd, dump, writeraw, splitcombos))
+        self.p2 = Process(target=unpackEbook, args=(q, mobipath, indir, outdir, apnxfile, epubversion, use_hd, dump, writeraw, splitcombos))
         self.p2.start()
 
         # python does not seem to allow you to create
@@ -362,12 +412,19 @@ class MainDialog(tkinter.Frame):
 
 
 # child process / multiprocessing thread starts here
-def unpackEbook(q, infile, outdir, apnxfile, epubversion, use_hd, dump, writeraw, splitcombos):
+def unpackEbook(q, infile, indir, outdir, apnxfile, epubversion, use_hd, dump, writeraw, splitcombos):
     sys.stdout = QueuedStream(sys.stdout, q)
     sys.stderr = QueuedStream(sys.stderr, q)
     rv = 0
+    if indir:
+        files = [os.path.join(indir,f) for f in unipath.listdir(indir) if f.endswith('.azw3')]
+    else:
+        files = [infile]
+    print(files)
     try:
-        kindleunpack.unpackBook(infile, outdir, apnxfile, epubversion, use_hd, dodump=dump, dowriteraw=writeraw, dosplitcombos=splitcombos)
+        for f in files:
+            print("Process azw3 file: %s" % f)
+            kindleunpack.unpackBook(f, outdir, apnxfile, epubversion, use_hd, dodump=dump, dowriteraw=writeraw, dosplitcombos=splitcombos)
     except Exception as e:
         print("Error: %s" % e)
         print(traceback.format_exc())

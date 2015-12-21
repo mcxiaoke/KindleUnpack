@@ -22,6 +22,7 @@ def getprefs(configfile, tkobj, PERSIST):
 
     # Sane defaults
     prefs['mobipath'] = unipath.getcwd()
+    prefs['inpath'] = unipath.getcwd()
     prefs['outpath'] = unipath.getcwd()
     prefs['apnxpath'] = unipath.getcwd()
     prefs['splitvar'] = 0
@@ -50,6 +51,8 @@ def getprefs(configfile, tkobj, PERSIST):
 
         if 'mobipath' in tmpprefs.keys():
             prefs['mobipath'] = unicode_str(tmpprefs['mobipath'], 'utf-8')
+        if 'inpath' in tmpprefs.keys():
+            prefs['inpath'] = unicode_str(tmpprefs['inpath'], 'utf-8')
         if 'outpath' in tmpprefs.keys():
             prefs['outpath'] = unicode_str(tmpprefs['outpath'], 'utf-8')
         if 'apnxpath' in tmpprefs.keys():
@@ -77,6 +80,11 @@ def saveprefs(configfile, prefs, tkobj):
     apath = pathof(tkobj.mobipath.get())
     if apath is not None and unipath.isfile(apath):
         prefs['mobipath'] = os.path.dirname(apath)
+
+    # inpath
+    apath = pathof(tkobj.inpath.get())
+    if apath is not None and unipath.isdir(apath):
+        prefs['inpath'] = apath
 
     # outpath
     apath = pathof(tkobj.outpath.get())
