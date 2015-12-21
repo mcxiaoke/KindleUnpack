@@ -408,7 +408,7 @@ def processImage(i, files, rscnames, sect, data, beg, rsc_ptr, cover_offset):
     imgname = "image%05d.%s" % (i, imgtype)
     if cover_offset is not None and i == beg + cover_offset:
         imgname = "cover%05d.%s" % (i, imgtype)
-    print("Extracting image: {0:s} from section {1:d}".format(imgname,i))
+    # print("Extracting image: {0:s} from section {1:d}".format(imgname,i))
     outimg = os.path.join(files.imgdir, imgname)
     with open(pathof(outimg), 'wb') as f:
         f.write(data)

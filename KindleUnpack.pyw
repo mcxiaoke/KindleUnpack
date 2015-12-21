@@ -420,10 +420,9 @@ def unpackEbook(q, infile, indir, outdir, apnxfile, epubversion, use_hd, dump, w
         files = [os.path.join(indir,f) for f in unipath.listdir(indir) if f.endswith('.azw3')]
     else:
         files = [infile]
-    print(files)
     try:
         for f in files:
-            print("Process azw3 file: %s" % f)
+            print("Process Book file: %s" % f)
             kindleunpack.unpackBook(f, outdir, apnxfile, epubversion, use_hd, dodump=dump, dowriteraw=writeraw, dosplitcombos=splitcombos)
     except Exception as e:
         print("Error: %s" % e)
