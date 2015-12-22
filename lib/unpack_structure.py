@@ -92,6 +92,13 @@ class fileNames:
             elif unipath.isdir(realfilePath):
                 self.zipUpDir(myzip, tdir, localfilePath)
 
+    def fileEPUB(self):
+        return os.path.join(self.outdir, self.getInputFileBasename() + '.epub')
+
+    def hasEPUB(self):
+        bname = self.fileEPUB()
+        return unipath.exists(bname) and unipath.isfile(bname)
+
     def makeEPUB(self, usedmap, obfuscate_data, uid):
         bname = os.path.join(self.outdir, self.getInputFileBasename() + '.epub')
         # Create an encryption key for Adobe font obfuscation

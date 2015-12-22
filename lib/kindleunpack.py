@@ -863,6 +863,10 @@ def unpackBook(infile, outdir, apnxfile=None, epubver='2', use_hd=False, dodump=
 
     files = fileNames(infile, outdir)
 
+    if files.hasEPUB():
+        print('EPUB file %s exists, ignore.' % files.fileEPUB())
+        return
+
     # process the PalmDoc database header and verify it is a mobi
     sect = Sectionizer(infile)
     if sect.ident != b'BOOKMOBI' and sect.ident != b'TEXtREAd':

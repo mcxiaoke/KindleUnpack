@@ -28,20 +28,24 @@ def cleanup(outdir):
     shutil.rmtree(os.path.join(outdir,'HDImages'), ignore_errors=True)
 
 def unpack(indir, outdir):
-    print('Input Path = "'+ indir + '"\n')
-    print('Output Path = "' + outdir + '"\n')
+    print('Input Path = "'+ indir)
+    print('Output Path = "' + outdir)
     files = [os.path.join(indir,f) for f in unipath.listdir(indir) if f.endswith('.azw3') or f.endswith('.mobi')]
     if not unipath.exists(outdir):
         unipath.mkdir(outdir)
     ok = codecs.open(os.path.join(outdir, 'ok.log'), 'w', encoding='utf8')
     error = codecs.open(os.path.join(outdir, 'error.log'), 'w', encoding='utf8')
     for f in files:
-        print("Process Book file: %s" % f)
+        try:
+            print("Process Book file: %s" % f)
+        except UnicodeEncodeError as e:
+            # print("Process Book file:",f.decode('gbk'))
+            pass
         try:
             cleanup(outdir)
             kindleunpack.unpackBook(f, outdir)
             ok.write('OK: unpack file: %s\n' % f)
-        except Exception as e:
+        except BaseException as e:
             print("Error: %s" % e)
             error.write('Error: unpack file: %s\n' % f)
             continue
