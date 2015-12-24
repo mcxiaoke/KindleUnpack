@@ -3,7 +3,7 @@
 # @Author: mcxiaoke
 # @Date:   2015-12-22 23:38:39
 from __future__ import print_function, unicode_literals
-import os,sys, shutil, re, codecs, traceback, time
+import os,sys, shutil, re, codecs, traceback, time, string
 
 import lib.unipath as unipath
 from lib.unipath import pathof
@@ -25,7 +25,8 @@ def fix_name(name):
     for c in CHARS:
         name = name.replace(c,' ')
     name = name.replace('文字版','').replace('azw3','')
-    return name.replace('  ',' ').replace('  ',' ').strip()
+    name =  name.replace('  ',' ').replace('  ',' ').strip()
+    return string.capwords(name)
 
 def process(infile, debug=False):
     src = os.path.abspath(infile)
