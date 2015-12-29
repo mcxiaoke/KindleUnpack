@@ -20,13 +20,16 @@ from lib.unipath import pathof
 
 EXTENSIONS = ['.mobi', '.epub', '.azw3', '.pdf']
 CHARS = '#&%._<>[]［］【】《》（）\'"“”'
+STRIP_NUM_PREFIX = r'\d+\s(.*)'
 
 def fix_name(name):
     for c in CHARS:
         name = name.replace(c,' ')
     name = name.replace('文字版','').replace('azw3','')
     name =  name.replace('  ',' ').replace('  ',' ').strip()
-    return string.capwords(name)
+    name =  string.capwords(name)
+    m = re.compile(STRIP_NUM_PREFIX).match(name)
+    return m.group(1) if m else name
 
 def process(infile, debug=False):
     src = os.path.abspath(infile)
@@ -39,8 +42,7 @@ def process(infile, debug=False):
     if dname == sname or os.path.exists(dst):
         print('Ignore exists:',sname)
         return
-    #print(repr(src), type(src))
-    print('SRC:',src)
+    # print('SRC:',src)
     if not debug:
         print('DST:',dst)
         shutil.move(src, dst)
