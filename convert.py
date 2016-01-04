@@ -67,11 +67,12 @@ def unpack(indir, outdir):
 
 def get_dirs(root):
     dirs = []
-    for sd in subdirs:
-        if sd.startswith('.'):
-            subdirs.remove(sd)
-        else:
-            dirs.append(os.path.join(dr, sd))
+    for dr, subdirs, names in os.walk(root):
+        for sd in subdirs:
+            if sd.startswith('.'):
+                subdirs.remove(sd)
+            else:
+                dirs.append(os.path.join(dr, sd))
     return dirs
 
 
