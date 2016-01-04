@@ -19,6 +19,7 @@ from lib.unipath import pathof
 '''
 
 EXTENSIONS = ['.mobi', '.epub', '.azw3', '.pdf']
+
 CHARS = '#&%._<>[]［］【】《》（）\'"“”'
 STRIP_NUM_PREFIX = r'\d+\s(.*)'
 
@@ -55,9 +56,9 @@ if __name__ == '__main__':
     if debug:
         print('DEBUG MODE')
     files = []
-    for dir, subdirs, names in os.walk(path):
+    for dr, subdirs, names in os.walk(path):
         for name in names:
-            files.append(os.path.join(dir,name))
+            files.append(os.path.join(dr,name))
     files = [f for f in files if os.path.splitext(os.path.basename(f))[1] in EXTENSIONS]
     log_name = 'error-%s.log' % time.strftime("%Y%m%d%H%M%S", time.localtime())
     error = codecs.open(log_name, 'w', encoding='utf8')

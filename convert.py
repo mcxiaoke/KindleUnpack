@@ -21,17 +21,28 @@ add_cp65001_codec()
 
 import lib.kindleunpack as kindleunpack
 
+
+def delete(afile):
+    try:
+        os.remove(afile)
+    except OSError, e:
+        pass
+
+
 def cleanup(outdir):
-    shutil.rmtree(os.path.join(outdir,'mobi8'), ignore_errors=True)
-    shutil.rmtree(os.path.join(outdir,'mobi7'), ignore_errors=True)
-    shutil.rmtree(os.path.join(outdir,'Images'), ignore_errors=True)
-    shutil.rmtree(os.path.join(outdir,'HDImages'), ignore_errors=True)
+    shutil.rmtree(os.path.join(outdir, 'mobi8'), ignore_errors=True)
+    shutil.rmtree(os.path.join(outdir, 'mobi7'), ignore_errors=True)
+    shutil.rmtree(os.path.join(outdir, 'Images'), ignore_errors=True)
+    shutil.rmtree(os.path.join(outdir, 'HDImages'), ignore_errors=True)
+    delete(os.path.join(outdir, 'kindlegensrc.zip'))
+
 
 def unpack(indir, outdir):
-    print('Input Path = "'+ indir)
-    print('Output Path = "' + outdir)
-    files = [os.path.join(indir,f) for f in unipath.listdir(indir) if f.endswith('.azw3') or f.endswith('.mobi')]
-    if not unipath.exists(outdir):
+    outdir = outdir or indir
+    print('Input Path: %s' % indir)
+    print('Output Path: %s' % outdir)
+    files = [os.path.join(indir, f) for f in unipath.listdir(indir) if f.endswith('.azw3') or f.endswith('.mobi')]
+    if outdir and not unipath.exists(outdir):
         unipath.mkdir(outdir)
     ok = codecs.open(os.path.join(outdir, 'ok.log'), 'w', encoding='utf8')
     error = codecs.open(os.path.join(outdir, 'error.log'), 'w', encoding='utf8')
@@ -44,7 +55,7 @@ def unpack(indir, outdir):
         try:
             cleanup(outdir)
             kindleunpack.unpackBook(f, outdir)
-            ok.write('OK: unpack file: %s\n' % f)
+            ok.write('%s\n' % f)
         except BaseException as e:
             print("Error: %s" % e)
             error.write('Error: unpack file: %s\n' % f)
@@ -53,11 +64,26 @@ def unpack(indir, outdir):
     ok.close()
     error.close()
 
+
+def get_dirs(root):
+    dirs = []
+    for sd in subdirs:
+        if sd.startswith('.'):
+            subdirs.remove(sd)
+        else:
+            dirs.append(os.path.join(dr, sd))
+    return dirs
+
+
 def main(argv=unicode_argv()):
-    if len(argv) != 3:
-        print("Usage:", argv[0], "input_dir output_dir")
-        sys.exit(1)
-    unpack(argv[1], argv[2])
+    if len(argv) < 2:
+        print("Usage:", argv[0], "input_dir [output_dir]")
+    indir = argv[1]
+    outdir = argv[2] if len(argv) > 2 else None
+    dirs = get_dirs(indir)
+    for d in dirs:
+        unpack(d, outdir)
+    unpack(indir, outdir)
     return 0
 
 if __name__ == "__main__":
