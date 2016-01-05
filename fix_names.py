@@ -20,7 +20,7 @@ from lib.unipath import pathof
 
 EXTENSIONS = ['.mobi', '.epub', '.azw3', '.pdf']
 
-CHARS = '#&%._<>[]［］【】《》（）\'"“”'
+CHARS = '#&%._<>[]［］【】《》《》（）\'"“”'
 STRIP_NUM_PREFIX = r'\d+\s(.*)'
 
 def fix_name(name):
@@ -41,7 +41,7 @@ def process(infile, debug=False):
     # output = os.path.join(fdir,'output')
     dst = os.path.join(fdir, dname)
     if dname == sname or os.path.exists(dst):
-        print('Ignore exists:',sname)
+        #print('Ignore exists:',sname)
         return
     # print('SRC:',src)
     if not debug:
